@@ -1,0 +1,34 @@
+flowchart LR
+    %%{init: { "theme": "default" } }%%
+    subgraph 3: Campaign Managers tweak Ad Campaigns
+        AM3(Ad Campaign Managers) -- 1: View & Assess BOB_CAMP1 performance --> JWA3(Java Web App)
+        AM3 -- 2: Edit Campaign: BOB_CAMP1 --> JWA3
+        JWA3 -- Edit Campaign --> BA3(Bing Ads API)
+        JWA3 -- Edit Campaign --> AW3(Adwords API)
+        JWA3 -- Edit Campaign --> FB3(Facebook Ads API)
+
+    end
+    subgraph 2: Download Daily Performance Data of BOB_CAMP1
+        subgraph dlfb
+        DLFB(C# Facebook Ads downloader) -- 1. get BOB_CAMP1 performance --> FBAPI(FB ADS API)
+        end
+
+        subgraph dlaw
+        DLAW(C# AdWords downloader) -- 1. get BOB_CAMP1 performance --> AWAPI(Adwords ADS API)
+        end
+        subgraph dlbi
+        DLBI(C# Bing Ads downloader) -- 1. get BOB_CAMP1 performance --> BIAPI(Bing ADS API)
+        end
+        subgraph MySQL
+        DLFB -- 2. insert perf data --> MY(RDS Instance)
+        DLAW -- 2. insert perf data --> MY
+        DLBI -- 2. insert perf data --> MY
+        end
+    end
+    subgraph 1: New Customer: Bob's Pizzas
+        C(Customer) -- campaign details --> AM(Ad Campaign Managers)
+        AM -- Create Campaign: BOB_CAMP1 --> JWA(Java Web App)
+        JWA -- Create Campaign --> BA(Bing Ads API)
+        JWA -- Create Campaign --> AW(Adwords API)
+        JWA -- Create Campaign --> FB(Facebook API)
+    end

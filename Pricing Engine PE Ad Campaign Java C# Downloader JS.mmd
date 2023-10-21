@@ -1,5 +1,4 @@
 flowchart LR
-    %%{init: { "theme": "default" } }%%
     subgraph 3: Campaign Managers tweak Ad Campaigns
         AM3(Ad Campaign Managers) -- 1: View & Assess BOB_CAMP1 performance --> JWA3(Java Web App)
         AM3 -- 2: Edit Campaign: BOB_CAMP1 --> JWA3
@@ -8,21 +7,20 @@ flowchart LR
         JWA3 -- Edit Campaign --> FB3(Facebook Ads API)
 
     end
-    subgraph 2: Download Daily Performance Data of BOB_CAMP1
-        subgraph dlfb
-        DLFB(C# Facebook Ads downloader) -- 1. get BOB_CAMP1 performance --> FBAPI(FB ADS API)
-        end
+    subgraph 2: Download the Daily Performance Data of BOB_CAMP1 and store in MySQL
+        subgraph A: Download Performance Data
+            DLFB(C# Facebook Ads downloader) -- get BOB_CAMP1 performance --> FBAPI(FB ADS API)
 
-        subgraph dlaw
-        DLAW(C# AdWords downloader) -- 1. get BOB_CAMP1 performance --> AWAPI(Adwords ADS API)
+            DLAW(C# AdWords downloader) -- get BOB_CAMP1 performance --> AWAPI(Adwords ADS API)
+            DLBI(C# Bing Ads downloader) -- get BOB_CAMP1 performance --> BIAPI(Bing ADS API)
         end
-        subgraph dlbi
-        DLBI(C# Bing Ads downloader) -- 1. get BOB_CAMP1 performance --> BIAPI(Bing ADS API)
-        end
-        subgraph MySQL
-        DLFB -- 2. insert perf data --> MY(RDS Instance)
-        DLAW -- 2. insert perf data --> MY
-        DLBI -- 2. insert perf data --> MY
+        subgraph B: Insert Performance Data into MySQL
+            DLFB2(C# Facebook Ads downloader)
+            DLAW2(C# AdWords downloader)
+            DLBI2(C# Bing Ads downloader)
+            DLFB2 -- insert perf data --> MY(RDS Instance)
+            DLAW2 -- insert perf data --> MY
+            DLBI2 -- insert perf data --> MY
         end
     end
     subgraph 1: New Customer: Bob's Pizzas
@@ -32,3 +30,19 @@ flowchart LR
         JWA -- Create Campaign --> AW(Adwords API)
         JWA -- Create Campaign --> FB(Facebook API)
     end
+
+    subgraph Introduction
+
+        Intro("This diagram depicts the 3 system functions that I designed and implemented
+        when at Pricing Engine (an AdTech startup, servicing SMB's), via an example
+        Use Case in which Bob's Pizzas [a fictitious local pizza joint] is onboarded
+        as a customer.
+
+        The system creates, monitors and optimizes Ad campaigns for Bob on Bing Ads,
+        Facebook Ads and AdWords simultaneously. My responsibility was to make these
+        tasks as easy as possible for our account managers, and hence I came
+        up with the below 3 modules.")
+    end
+
+    style Introduction color:#f66
+    style Intro color:#f66
